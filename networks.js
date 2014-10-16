@@ -14,8 +14,8 @@ exports.livenet = {
   hkeyPrivateVersion: 0x0488ade4,
 
   genesisBlock: {
-    hash: hex('c741436d354a9fb337fbd79e4b2750732571f00e8b78d04493f9e9283cf4ad0b'),
-    merkle_root: hex('deceb268776c85c006c65804eb53e55960a85aaf75e366a5c7b0bf961b6defec'),
+    hash: hex('C741436D354A9FB337FBD79E4B2750732571F00E8B78D04493F9E9283CF4AD0B'),
+    merkle_root: hex('DECEB268776C85C006C65804EB53E55960A85AAF75E366A5C7B0BF961B6DEFEC'),
     height: 0,
     nonce: 24706485,
     version: 1,
