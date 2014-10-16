@@ -1,4 +1,3 @@
-
 /**
  * Used during transcation verification when a source txout is missing.
  *
@@ -9,15 +8,17 @@ function MissingSourceError(msg, missingTxHash) {
   // TODO: Since this happens in normal operation, perhaps we should
   //       avoid generating a whole stack trace.
   Error.call(this);
-  Error.captureStackTrace(this, arguments.callee);
+  // This is not compatible with firefox.
+  //  Error.captureStackTrace(this, arguments.callee);
   this.message = msg;
   this.missingTxHash = missingTxHash;
   this.name = 'MissingSourceError';
 };
 
-MissingSourceError.prototype.__proto__ = Error.prototype;
+MissingSourceError.prototype = Object.create(Error.prototype);
 
 exports.MissingSourceError = MissingSourceError;
+
 
 /**
  * Used in several places to indicate invalid data.
@@ -29,12 +30,14 @@ function VerificationError(msg, missingTxHash) {
   // TODO: Since this happens in normal operation, perhaps we should
   //       avoid generating a whole stack trace.
   Error.call(this);
-  Error.captureStackTrace(this, arguments.callee);
+
+  // This is not compatible with firefox.
+  //  Error.captureStackTrace(this, arguments.callee);
   this.message = msg;
   this.missingTxHash = missingTxHash;
   this.name = 'VerificationError';
 };
 
-VerificationError.prototype.__proto__ = Error.prototype;
+VerificationError.prototype = Object.create(Error.prototype);
 
 exports.VerificationError = VerificationError;

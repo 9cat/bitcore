@@ -1,7 +1,7 @@
 'use strict';
 
-var chai = require('chai');
-var bitcore = require('../bitcore');
+var chai = chai || require('chai');
+var bitcore = bitcore || require('../bitcore');
 
 var should = chai.should();
 
@@ -13,31 +13,24 @@ describe('Opcode', function() {
     should.exist(OpcodeModule);
   });
   it('should be able to create class', function() {
-    Opcode = OpcodeModule.class();
+    Opcode = OpcodeModule;
     should.exist(Opcode);
   });
   it('should be able to create instance', function() {
-    var oc = new Opcode();
+    var oc = new Opcode(81);
     should.exist(oc);
   });
-  it.skip('should be able to create some constants', function() {
-    // TODO: test works in node but not in browser
-    for (var i in Opcode.map) {
-      console.log('var '+i + ' = ' + Opcode.map[i] + ';');
-      eval('var '+i + ' = ' + Opcode.map[i] + ';');
-      console.log(eval(i));
-    }
-    should.exist(OP_VER);
-    should.exist(OP_HASH160);
-    should.exist(OP_RETURN);
-    should.exist(OP_EQUALVERIFY);
-    should.exist(OP_CHECKSIG);
-    should.exist(OP_CHECKMULTISIG);
-
+  it('should be able to create some constants', function() {
+    should.exist(Opcode.map.OP_VER);
+    should.exist(Opcode.map.OP_HASH160);
+    should.exist(Opcode.map.OP_RETURN);
+    should.exist(Opcode.map.OP_EQUALVERIFY);
+    should.exist(Opcode.map.OP_CHECKSIG);
+    should.exist(Opcode.map.OP_CHECKMULTISIG);
+  });
+  it('#asList should work', function() {
+    var list = Opcode.asList();
+    (typeof(list[0])).should.equal('string');
+    list.length.should.equal(116);
   });
 });
-
-
-
-
-

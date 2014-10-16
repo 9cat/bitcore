@@ -1,20 +1,21 @@
 'use strict';
 
-var chai = require('chai');
-var bitcore = require('../bitcore');
+var chai = chai || require('chai');
+var bitcore = bitcore || require('../bitcore');
+
+var testdata = testdata || require('./testdata');
 var should = chai.should();
 
-var Address = bitcore.Address.class();
-var PrivateKey = bitcore.PrivateKey.class();
+var Address = bitcore.Address;
+var PrivateKey = bitcore.PrivateKey;
 var networks = bitcore.networks;
-var KeyModule = bitcore.KeyModule;
+var Key = bitcore.Key;
 
-var test_data = require('./testdata');
 
 
 function test_encode_priv(b58, payload, isTestnet, isCompressed) {
   var network = isTestnet ? networks.testnet : networks.livenet;
-  var version = network.keySecret;
+  var version = network.privKeyVersion;
 
   var buf_pl = new Buffer(payload, 'hex');
   var buf;
@@ -25,7 +26,7 @@ function test_encode_priv(b58, payload, isTestnet, isCompressed) {
   } else
     buf = buf_pl;
 
-  var key = new KeyModule.Key();
+  var key = new Key();
   key.private = buf;
   key.compressed = isCompressed;
 
@@ -36,7 +37,7 @@ function test_encode_priv(b58, payload, isTestnet, isCompressed) {
 function test_encode_pub(b58, payload, isTestnet, addrType) {
   var isScript = (addrType === 'script');
   var network = isTestnet ? networks.testnet : networks.livenet;
-  var version = isScript ? network.addressScript : network.addressPubkey;
+  var version = isScript ? network.P2SHVersion : network.addressVersion;
   var buf = new Buffer(payload, 'hex');
   var addr = new Address(version, buf);
   addr.toString().should.equal(b58);
@@ -45,7 +46,7 @@ function test_encode_pub(b58, payload, isTestnet, addrType) {
 
 function test_decode_priv(b58, payload, isTestnet, isCompressed) {
   var network = isTestnet ? networks.testnet : networks.livenet;
-  var version = network.keySecret;
+  var version = network.privKeyVersion;
 
   var buf_pl = new Buffer(payload, 'hex');
   var buf;
@@ -64,7 +65,7 @@ function test_decode_priv(b58, payload, isTestnet, isCompressed) {
 function test_decode_pub(b58, payload, isTestnet, addrType) {
   var isScript = (addrType === 'script');
   var network = isTestnet ? networks.testnet : networks.livenet;
-  var version = isScript ? network.addressScript : network.addressPubkey;
+  var version = isScript ? network.P2SHVersion : network.addressVersion;
   var buf = new Buffer(payload, 'hex');
   var addr = new Address(b58);
 
@@ -110,7 +111,7 @@ function is_invalid(datum) {
 }
 
 describe('Valid base58 keys', function() {
-  test_data.dataValid.forEach(function(datum) {
+  testdata.dataValid.forEach(function(datum) {
     it('valid ' + datum[0], function() {
       is_valid(datum);
     });
@@ -118,7 +119,7 @@ describe('Valid base58 keys', function() {
 });
 
 describe('Invalid base58 keys', function() {
-  test_data.dataInvalid.forEach(function(datum) {
+  testdata.dataInvalid.forEach(function(datum) {
     it('invalid ' + datum, function() {
       is_invalid(datum);
     });

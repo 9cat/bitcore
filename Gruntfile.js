@@ -3,44 +3,31 @@
 module.exports = function(grunt) {
 
   //Load NPM tasks
-  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-markdown');
+  grunt.loadNpmTasks('grunt-shell');
 
   // Project Configuration
   grunt.initConfig({
-    browserify: {
-      client: {
-        src: ['bitcore.js'],
-        dest: 'browser/bundle.js',
+    shell: {
+      browserify: {
         options: {
-          debug: true,
-          alias: [
-            'browserify-bignum/bignumber.js:bignum',
-            'browserify-buffertools/buffertools.js:buffertools'
-          ],
-          standalone: 'bitcore',
-        }
-      },
-      test_data: {
-        src: ['test/testdata.js'],
-        dest: 'browser/testdata.js',
-        options: {
-          transform: ['brfs'],
-          debug: true,
-          standalone: 'testdata',
-        }
+          stdout: true,
+          stderr: true
+        },
+        command: grunt.option('target') === 'dev' ?
+            'node ./browser/build.js -a -d; docco lib/* ' : 'node ./browser/build.js -a'
       }
     },
     watch: {
       readme: {
-        files: ['README.md'],
+        files: ['README.md', 'CONTRIBUTING.md'],
         tasks: ['markdown']
       },
       scripts: {
-        files: ['**/*.js', '**/*.html', '!**/node_modules/**', '!browser/bundle.js', '!browser/testdata.js'],
-        tasks: ['browserify' /*, 'mochaTest'*/ ],
+        files: ['**/*.js', '**/*.html', '!**/node_modules/**', '!browser/bundle.js', '!browser/testdata.js', '!docs/**', '!*.md', '!README.html', '!CONTRIBUTING.html'],
+        tasks: ['shell'],
       },
     },
     mochaTest: {
@@ -53,7 +40,7 @@ module.exports = function(grunt) {
       all: {
         files: [{
           expand: true,
-          src: 'README.md',
+          src: '*.md',
           dest: '.',
           ext: '.html'
         }]
@@ -63,6 +50,6 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('default', ['watch']);
+  grunt.registerTask('default', ['shell','watch']);
 
 };

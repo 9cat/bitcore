@@ -1,19 +1,14 @@
 'use strict';
 
-var chai = require('chai');
-var bitcore = require('../bitcore');
+var chai = chai || require('chai');
+var bitcore = bitcore || require('../bitcore');
 
 var should = chai.should();
 
-var PeerManagerModule = bitcore.PeerManager;
-var PeerManager;
+var PeerManager = bitcore.PeerManager;
 
 describe('PeerManager', function() {
-  it('should initialze the main object', function() {
-    should.exist(PeerManagerModule);
-  });
   it('should be able to create class', function() {
-    PeerManager = PeerManagerModule.class();
     should.exist(PeerManager);
   });
   it('should be able to create instance', function() {
@@ -28,6 +23,16 @@ describe('PeerManager', function() {
     var pm = new PeerManager();
     pm.start();
     pm.stop.bind(pm).should.not.throw();
+  });
+  it('should extend default config with passed config', function() {
+    var pm = new PeerManager({ 
+      proxy: { 
+        host: 'localhost', 
+        port: 9050 
+      } 
+    });
+    should.exist(pm.config.network);
+    should.exist(pm.config.proxy);
   });
 });
 
