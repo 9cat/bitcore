@@ -934,8 +934,8 @@ describe('TransactionBuilder', function() {
   it('should check sign parameters', function() {
     var b = getP2shBuilder(1);
     (function() {
-      b.sign(testdata.dataUnspentSign.keyStringsP2sh[0])
-    }).should.throw('array');
+      b.sign(testdata.dataUnspentSign.keyStringsP2sh[0]);
+    }).should.not.throw('array');
   });
 
 
